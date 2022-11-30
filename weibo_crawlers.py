@@ -1,6 +1,7 @@
 from config import g_none_word, g_weibo_host, g_weibo_headers
 import requests
 from bs4 import BeautifulSoup
+import csv
 
 class WeiboCrawler(object):
     """爬虫主入口
@@ -30,13 +31,14 @@ class WeiboCrawler(object):
         is_search_by_time = True
         begin_time = self.__search_config.get("begin_time",g_none_word)
         end_time = self.__search_config.get("end_time",g_none_word)
+        page = self.__search_config.get("page",g_none_word)
         if begin_time == g_none_word or end_time == g_none_word:
             print("开始时间或者结束时间设置为空")
             is_search_by_time = False
         if is_search_by_time:
             time_scope = f"custom%3A{begin_time}%3A{end_time}"
             print(f"构建搜索时间范围成功：字段参数为:{time_scope}")
-            req_url = f"{g_weibo_host}q={keyword}&typeall=1&suball=1&timescope={time_scope}&Refer=g"
+            req_url = f"{g_weibo_host}q={keyword}&typeall=1&suball=1&timescope={time_scope}&Refer=g&page={page}"
             print(f"需要搜索的url地址构建成功，地址为: {req_url}")
             resp = requests.get(req_url, headers=g_weibo_headers)
             if resp.status_code !=200:
@@ -83,6 +85,19 @@ class WeiboCrawler(object):
         if self.__search_result == False:
             return False, "未搜索到数据，无法保存"
         else:
-            print(f"爬取结果为:{self.__result_text}")
             bs_ = BeautifulSoup(self.__result_text,"lxml")
+            node_type_list = bs_.find_all("div",{"class":"from"})
+            for node_type in node_type_list:
+                #print(node_type)
+                a_ = node_type.find("a")
+                href_link = a_.attrs["href"] # 链接
+                redbook_link = f"http:{href_link}"
+                with open(file_name, 'a+', newline='') as f:
+                    writer = csv.writer(f)
+                    data = []
+                    data.append(str(redbook_link))
+                    writer.writerow(data)
+                print(f"微博链接为:{redbook_link}")
+            # feed_list = bs_.find_all("a",{"action-type":"feed_list"})
+            # print(feed_list)
         # 执行保存操作
