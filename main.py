@@ -11,6 +11,8 @@ if __name__ == "__main__":
     """主程序入口
     """
     print("微博搜索BEGIN")
+    key_word = search_config.get("keyword","")
     wb = WeiboCrawler(search_config)
     wb.start_search()
+    wb.save_to_file(f"{key_word}_关键词搜索.xlsx",True)
     print("微博搜索END")

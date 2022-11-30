@@ -1,6 +1,6 @@
 from config import g_none_word, g_weibo_host, g_weibo_headers
 import requests
-
+from bs4 import BeautifulSoup
 
 class WeiboCrawler(object):
     """爬虫主入口
@@ -45,7 +45,6 @@ class WeiboCrawler(object):
             try:
                 resp.encoding = "utf-8"
                 resp_text = resp.text
-                print(f"返回结果为:{resp_text}")
                 self.__search_result = True
                 self.__result_text = resp_text
                 return True
@@ -62,7 +61,6 @@ class WeiboCrawler(object):
             try:
                 resp.encoding = "utf-8"
                 resp_text = resp.text
-                print(f"返回结果为:{resp_text}")
                 self.__result_text = resp_text # 返回结果保存
                 self.__search_result = True
                 return True
@@ -84,4 +82,7 @@ class WeiboCrawler(object):
         """
         if self.__search_result == False:
             return False, "未搜索到数据，无法保存"
+        else:
+            print(f"爬取结果为:{self.__result_text}")
+            bs_ = BeautifulSoup(self.__result_text,"lxml")
         # 执行保存操作
