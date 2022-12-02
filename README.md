@@ -1,4 +1,4 @@
-# weibo_crawl
+# weibo_keyword_crawl
 Python爬取微博关键词，并且记录相关数据
 
 # 环境安装
