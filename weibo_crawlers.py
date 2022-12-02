@@ -1,7 +1,86 @@
-from config import g_none_word, g_weibo_host, g_weibo_headers
+from config import g_none_word, g_weibo_host, g_weibo_headers, WeiboData
 import requests
 from bs4 import BeautifulSoup
 import csv
+import re
+import json
+import os
+import dateutil.parser
+
+
+def base62_decode(string):
+    """
+    base
+    """
+    alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    string = str(string)
+    num = 0
+    idx = 0
+    for char in string:
+        power = (len(string) - (idx + 1))
+        num += alphabet.index(char) * (len(alphabet) ** power)
+        idx += 1
+
+    return num
+
+
+def reverse_cut_to_length(content, code_func, cut_num=4, fill_num=7):
+    """
+    url to mid
+    """
+    content = str(content)
+    cut_list = [content[i - cut_num if i >= cut_num else 0:i] for i in range(len(content), 0, (-1 * cut_num))]
+    cut_list.reverse()
+    result = []
+    for i, item in enumerate(cut_list):
+        s = str(code_func(item))
+        if i > 0 and len(s) < fill_num:
+            s = (fill_num - len(s)) * '0' + s
+        result.append(s)
+    return ''.join(result)
+
+
+def url_to_mid(url: str):
+    """>>> url_to_mid('z0JH2lOMb')
+    3501756485200075
+    """
+    result = reverse_cut_to_length(url, base62_decode)
+    return int(result)
+
+
+def parse_time(s):
+    """
+    Wed Oct 19 23:44:36 +0800 2022 => 2022-10-19 23:44:36
+    """
+    # return "2022-10-19 23:44:36"
+    return dateutil.parser.parse(s).strftime('%Y-%m-%d %H:%M:%S')
+
+
+def parse_user_info(data):
+    """
+    解析用户信息
+    """
+    # 基础信息
+    user = {
+        "_id": str(data['id']),
+        "avatar_hd": data['avatar_hd'],
+        "nick_name": data['screen_name'],
+        "verified": data['verified'],
+    }
+    # 额外的信息
+    keys = ['description', 'followers_count', 'friends_count', 'statuses_count',
+            'gender', 'location', 'mbrank', 'mbtype', 'credit_score']
+    for key in keys:
+        if key in data:
+            user[key] = data[key]
+    if 'created_at' in data:
+        user['created_at'] = parse_time(data.get('created_at'))
+    if user['verified']:
+        user['verified_type'] = data['verified_type']
+        if 'verified_reason' in data:
+            user['verified_reason'] = data['verified_reason']
+    return user
+
 
 class WeiboCrawler(object):
     """爬虫主入口
@@ -12,6 +91,7 @@ class WeiboCrawler(object):
     def __init__(self, search_config: dict):
         self.__search_config = search_config
         self.__search_result = False
+        self.__key_word = search_config.get("keyword",g_none_word)
     
     
     def start_search(self, is_need_multithreading: bool = False):
@@ -71,6 +151,52 @@ class WeiboCrawler(object):
                 return False
         return False
     
+    def parse_blog_info(self, data):
+        tweet = {
+        "_id": str(data['mid']),
+        "mblogid": data['mblogid'],
+        "created_at": parse_time(data['created_at']),  # 文章发布时间
+        "geo": data['geo'],
+        "ip_location": data.get('region_name', None),
+        "reposts_count": data['reposts_count'],
+        "comments_count": data['comments_count'],
+        "attitudes_count": data['attitudes_count'],
+        "source": data['source'],
+        "content": data['text_raw'].replace('\u200b', ''),
+        "pic_urls": ["https://wx1.sinaimg.cn/orj960/" + pic_id for pic_id in data.get('pic_ids', [])],
+        "pic_num": data['pic_num'],
+        'isLongText': False,
+        "user": parse_user_info(data['user']),
+        }
+        if 'page_info' in data and data['page_info'].get('object_type', '') == 'video':
+            tweet['video'] = data['page_info']['media_info']['mp4_720p_mp4']
+        tweet['url'] = f"https://weibo.com/{tweet['user']['_id']}/{tweet['mblogid']}"  # 文章地址
+        if 'continue_tag' in data and data['isLongText']:
+            tweet['isLongText'] = True
+        return tweet
+    
+    
+    def save_wb_data(self, file_name, wb_data:WeiboData):
+        data_dict = wb_data.__dict__
+        is_first = False
+        if os.path.exists(file_name):
+            is_first = False
+        else:
+            is_first = True
+        with open(file_name, 'a+', newline='') as f:
+            writer = csv.writer(f)
+            if is_first == True:
+                first_data = ["关键词","帖子内容","帖子链接","帖子点赞数",
+                              "帖子转发数","帖子评论数","图片视频链接",
+                              "发布时间","发布者的id","发布者的姓名",
+                              "发布人的账号类型","发布人的粉丝数","作者简介",
+                              "ip归属地","性别","全部微博数量"]
+                writer.writerow(first_data)
+            data = []
+            for item_ in data_dict.values():
+                data.append(item_)
+            writer.writerow(data)
+    
     
     def save_to_file(self, file_name:str, is_appended:bool = True):
         """保存到文件中
@@ -85,19 +211,62 @@ class WeiboCrawler(object):
         if self.__search_result == False:
             return False, "未搜索到数据，无法保存"
         else:
-            bs_ = BeautifulSoup(self.__result_text,"lxml")
-            node_type_list = bs_.find_all("div",{"class":"from"})
-            for node_type in node_type_list:
-                #print(node_type)
-                a_ = node_type.find("a")
-                href_link = a_.attrs["href"] # 链接
-                redbook_link = f"http:{href_link}"
-                with open(file_name, 'a+', newline='') as f:
-                    writer = csv.writer(f)
-                    data = []
-                    data.append(str(redbook_link))
-                    writer.writerow(data)
-                print(f"微博链接为:{redbook_link}")
-            # feed_list = bs_.find_all("a",{"action-type":"feed_list"})
-            # print(feed_list)
-        # 执行保存操作
+            result_text = self.__result_text # 结果
+            tweet_ids = re.findall(r'\d+/(.*?)\?refer_flag=1001030103_\'\)">复制微博地址</a>', result_text)
+            for tweet_id in tweet_ids:
+                wb_data = WeiboData() # 微博数据
+                wb_data.keyword = self.__key_word # 关键词
+                url = f"https://weibo.com/ajax/statuses/show?id={tweet_id}"
+                resp_blog = requests.get(url, headers=g_weibo_headers)
+                resp_blog.encoding = 'utf-8'
+                response_text_blog = resp_blog.text
+                data = json.loads(response_text_blog)
+                item_blog = self.parse_blog_info(data) # 博客数据
+                wb_data.post_content = item_blog.get("content",g_none_word) # 帖子内容
+                wb_data.post_url = item_blog.get("url",g_none_word) # 帖子链接
+                wb_data.post_liked = item_blog.get("attitudes_count","0") # 点赞
+                wb_data.post_transpond = item_blog.get("reposts_count","0") # 转发
+                wb_data.post_comment = item_blog.get("comments_count","0") # 评论
+                wb_data.post_image_videos_link = str(item_blog.get("video",g_none_word)) + str(item_blog.get("pic_urls",g_none_word)) # 图片记录
+                wb_data.post_release_time = item_blog.get("created_at",g_none_word) # 发布时间
+                wb_data.post_user_id = item_blog["user"]["_id"] # 发布者的id
+                wb_data.post_user_name = item_blog["user"]["nick_name"]
+                for key_, value_ in item_blog.items():
+                    if key_ == "user":
+                        user_dict = value_
+                        user_id = user_dict["_id"]
+                        user_url = f'https://weibo.com/ajax/profile/info?uid={user_id}' # 用户链接
+                        resp_user = requests.get(user_url,headers=g_weibo_headers)
+                        resp_user.encoding = "utf-8"
+                        data_user = json.loads(resp_user.text)
+                        item_user = parse_user_info(data_user["data"]["user"])
+                        url_user_info = f"https://weibo.com/ajax/profile/detail?uid={item_user['_id']}"
+                        resp_user_info = requests.get(url_user_info,headers=g_weibo_headers)
+                        data_user_info = json.loads(resp_user_info.text)['data']
+                        item_user['birthday'] = data_user_info.get('birthday', g_none_word)
+                        if 'created_at' not in item_user:
+                            item_user['created_at'] = data_user_info.get('created_at', g_none_word)
+                        item_user['desc_text'] = data_user_info.get('desc_text', g_none_word)
+                        item_user['ip_location'] = data_user_info.get('ip_location', g_none_word)
+                        item_user['sunshine_credit'] = data_user_info.get('sunshine_credit', {}).get('level', g_none_word)
+                        item_user['label_desc'] = [label['name'] for label in data_user_info.get('label_desc', [])]
+                        if 'company' in data_user_info:
+                            item_user['company'] = data_user_info['company']
+                        if 'education' in data_user_info:
+                            item_user['education'] = data_user_info['education']
+                        
+                        wb_data.post_account_type = item_user.get("verified",g_none_word) # 是否认证
+                        wb_data.post_fans_num = item_user.get("friends_count",g_none_word) # 粉丝数
+                        wb_data.post_author_brief = item_user.get("description",g_none_word) # 简介
+                        wb_data.post_ip_pos = item_user.get("ip_location",g_none_word)
+                        sex = item_user.get("gender","m") # m 男性
+                        if sex == "m":
+                            wb_data.post_gender = "男"
+                        else:
+                            wb_data.post_gender = "女"
+                        wb_data.post_all_weibo_nums  = item_user.get("statuses_count",g_none_word)
+                        self.save_wb_data(file_name,wb_data)
+                        
+                        
+                
+                
