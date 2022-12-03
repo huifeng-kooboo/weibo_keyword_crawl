@@ -2,6 +2,8 @@
 from weibo_crawlers import WeiboCrawler
 import dateutil
 import datetime
+import os
+import platform
 
 def parse_weibo_time_list(begin_time:str, end_time: str, day_interval: int = 4):
     """获取 begin 和end的列表集合
@@ -31,8 +33,8 @@ def parse_weibo_time_list(begin_time:str, end_time: str, day_interval: int = 4):
     
 
 search_config = {
-    "keyword" : "补气血", # 搜索关键词
-    "begin_time":"2021-11-01-1",  # 开始时间 2022-11-08-1 ： 表示2022年11月8号1时
+    "keyword" : "羽毛球", # 搜索关键词
+    "begin_time":"2022-08-01-1",  # 开始时间 2022-11-08-1 ： 表示2022年11月8号1时
     "end_time":"2022-11-03-1",   # 结果时间： 2022-11-25-1：表示2022年11月25号1时
     "page" : "4"  # 页码
 }

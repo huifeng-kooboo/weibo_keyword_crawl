@@ -21,6 +21,18 @@ g_weibo_headers = {
 # 微博Host
 g_weibo_host = "https://s.weibo.com/weibo?"
 
+import platform
+
+def is_mac_os():
+    """判断是否为mac系统
+
+    Returns:
+        _type_: _description_
+    """
+    sys_platform = platform.platform().lower()
+    if sys_platform.count("macos") > 0:
+        return True
+    return False
 
 class WeiboData():
     """需要记录的微博数据列表
@@ -42,3 +54,4 @@ class WeiboData():
         self.post_ip_pos = "" # ip归属地
         self.post_gender = "" # 性别
         self.post_all_weibo_nums = "" # 全部微博数量
+        self.post_all_weibo_fans = "12"
