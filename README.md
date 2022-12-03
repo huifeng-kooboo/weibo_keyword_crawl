@@ -1,5 +1,5 @@
 # weibo_keyword_crawl
-Python爬取微博关键词，并且记录相关数据
+Python爬取微博关键词，并且记录相关数据，相比其他同类的爬虫，可以自动根据时间去切割数据
 
 # 环境安装
 1. 需要Python3.8 +的版本
@@ -33,3 +33,13 @@ cookie从```s.weibo.com```中获取
 
 微信收款码
 <img src = "https://ytouch-1258011219.cos.ap-nanjing.myqcloud.com/uPic/naicha_weixin.jpg">
+
+
+-----
+#### todo
+
+* 优化代码
+
+* 增加异步功能
+
+* 自动生成cookie的功能
