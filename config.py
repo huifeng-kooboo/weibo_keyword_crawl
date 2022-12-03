@@ -5,7 +5,7 @@ g_none_word = "None"  # 为空的字段统一使用
 # 微博请求头
 g_weibo_headers = {
     "user-agent":'''Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36''',
-    "cookie": '''SINAGLOBAL=8442133158314.253.1626682443637; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWqQKicwefG8NILG0Ep.eDf5JpX5KMhUgL.Foz0ShnNSh2f1Kz2dJLoIpjLxKqL1-BL1-eLxKnLB.-L1h.LxK.L1KBL12zt; ALF=1672496228; SSOLoginState=1669904229; SCF=AiUCu1UuXqnKGG3UVTsT5Kw_g3FfTTBsdquxuXiL-npEPILq8RbvYE4dCxPZFiY9XLEE2ORpImGc_zivyIwI8lI.; SUB=_2A25OjMc2DeRhGeRN71oW9C_Jwj6IHXVt-7_-rDV8PUNbmtANLUT9kW9NU7PGeJ3DB13mANevZ0Uhf_krxki104GY; _s_tentry=login.sina.com.cn; UOR=login.sina.com.cn,weibo.com,login.sina.com.cn; Apache=6512818099088.22.1669904230629; ULV=1669904230645:7:1:2:6512818099088.22.1669904230629:1669817521492''',
+    "cookie": '''SINAGLOBAL=8442133158314.253.1626682443637; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWqQKicwefG8NILG0Ep.eDf5JpX5KMhUgL.Foz0ShnNSh2f1Kz2dJLoIpjLxKqL1-BL1-eLxKnLB.-L1h.LxK.L1KBL12zt; UOR=login.sina.com.cn,weibo.com,login.sina.com.cn; PC_TOKEN=a30b589861; ALF=1672630856; SSOLoginState=1670038856; SCF=AiUCu1UuXqnKGG3UVTsT5Kw_g3FfTTBsdquxuXiL-npELaDQ4M9s1jthwdm6oa6cOiOzF76xYOpDc-PrmTy4g1I.; SUB=_2A25OjrUZDeRhGeRN71oW9C_Jwj6IHXVt_aHRrDV8PUNbmtANLXGgkW9NU7PGeE-xTMOTzbAvwpHGsQe7MCOrwry7; _s_tentry=login.sina.com.cn; Apache=5262559104979.425.1670038857482; ULV=1670038857486:8:2:3:5262559104979.425.1670038857482:1669904230645''',
     "accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "accept-encoding":"gzip, deflate, br", 
     "accept-language":"zh-CN,zh;q=0.9,ko;q=0.8,en;q=0.7",
