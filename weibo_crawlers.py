@@ -1,4 +1,4 @@
-from config import g_none_word, g_weibo_host, g_weibo_headers, WeiboData
+from config import g_none_word, g_weibo_host, g_weibo_headers, WeiboData, is_mac_os
 import requests
 from bs4 import BeautifulSoup
 import csv
@@ -183,21 +183,39 @@ class WeiboCrawler(object):
             is_first = False
         else:
             is_first = True
-        with open(file_name, 'a+', newline='') as f:
-            writer = csv.writer(f)
-            if is_first == True:
-                first_data = ["关键词","帖子内容","帖子链接","帖子点赞数",
+        is_mac = is_mac_os()
+        if is_mac:
+            with open(file_name, 'a+', newline='') as f:
+                writer = csv.writer(f)
+                if is_first == True:
+                    first_data = ["关键词","帖子内容","帖子链接","帖子点赞数",
                               "帖子转发数","帖子评论数","图片视频链接",
                               "发布时间","发布者的id","发布者的姓名",
                               "发布人的账号类型","发布人的粉丝数","作者简介",
                               "ip归属地","性别","全部微博数量"]
-                writer.writerow(first_data)
-            data = []
-            for item_ in data_dict.values():
-                data.append(item_)
-            writer.writerow(data)
-    
-    
+                    writer.writerow(first_data)
+                data = []
+                for item_ in data_dict.values():
+                    data.append(item_)
+                writer.writerow(data)
+        else:
+            try:
+                with open(file_name, 'a+', newline='',encoding='gbk') as f:
+                    writer = csv.writer(f)
+                    if is_first == True:
+                        first_data = ["关键词","帖子内容","帖子链接","帖子点赞数",
+                              "帖子转发数","帖子评论数","图片视频链接",
+                              "发布时间","发布者的id","发布者的姓名",
+                              "发布人的账号类型","发布人的粉丝数","作者简介",
+                              "ip归属地","性别","全部微博数量"]
+                        writer.writerow(first_data)
+                    data = []
+                    for item_ in data_dict.values():
+                        data.append(item_)
+                    writer.writerow(data)
+            except:
+                pass
+            
     def save_to_file(self, file_name:str, is_appended:bool = True):
         """保存到文件中
 
@@ -239,10 +257,13 @@ class WeiboCrawler(object):
                         resp_user = requests.get(user_url,headers=g_weibo_headers)
                         resp_user.encoding = "utf-8"
                         data_user = json.loads(resp_user.text)
+                        base_info = data_user["data"]["user"]
+                        print(f"用户base_info:{base_info}")
                         item_user = parse_user_info(data_user["data"]["user"])
                         url_user_info = f"https://weibo.com/ajax/profile/detail?uid={item_user['_id']}"
                         resp_user_info = requests.get(url_user_info,headers=g_weibo_headers)
                         data_user_info = json.loads(resp_user_info.text)['data']
+                        # print(f"用户基础信息为:{data_user_info}")
                         item_user['birthday'] = data_user_info.get('birthday', g_none_word)
                         if 'created_at' not in item_user:
                             item_user['created_at'] = data_user_info.get('created_at', g_none_word)
@@ -254,8 +275,16 @@ class WeiboCrawler(object):
                             item_user['company'] = data_user_info['company']
                         if 'education' in data_user_info:
                             item_user['education'] = data_user_info['education']
-                        
-                        wb_data.post_account_type = item_user.get("verified",g_none_word) # 是否认证
+                        verified_type_str = item_user.get("verified_type",g_none_word)
+                        if verified_type_str != g_none_word:
+                            if verified_type_str == 0 or verified_type_str == "0":
+                                wb_data.post_account_type = "黄V"
+                            elif verified_type_str == 7 or verified_type_str == "7":
+                                wb_data.post_account_type = "蓝V"
+                            else:
+                                wb_data.post_account_type = "无认证"
+                        else:
+                            wb_data.post_account_type = "无认证"
                         wb_data.post_fans_num = item_user.get("friends_count",g_none_word) # 粉丝数
                         wb_data.post_author_brief = item_user.get("description",g_none_word) # 简介
                         wb_data.post_ip_pos = item_user.get("ip_location",g_none_word)
