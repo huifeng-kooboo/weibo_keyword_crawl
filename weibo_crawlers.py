@@ -154,7 +154,7 @@ class WeiboCrawler(object):
     def parse_blog_info(self, data):
         tweet = {
         "_id": str(data['mid']),
-        "mblogid": data['mblogid'],
+        "mblogid": data['mblogid'],  # 博客id
         "created_at": parse_time(data['created_at']),  # 文章发布时间
         "geo": data['geo'],
         "ip_location": data.get('region_name', None),
