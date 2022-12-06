@@ -240,7 +240,18 @@ class WeiboCrawler(object):
                 response_text_blog = resp_blog.text
                 data = json.loads(response_text_blog)
                 item_blog = self.parse_blog_info(data) # 博客数据
-                wb_data.post_content = item_blog.get("content",g_none_word) # 帖子内容
+                if item_blog["isLongText"]:
+                    # 长篇文章
+                    long_id = item_blog['mblogid']
+                    print(f"id为{long_id}的是一篇长篇文章")
+                    url_long_text = "https://weibo.com/ajax/statuses/longtext?id=" + item_blog['mblogid']
+                    resp_long = requests.get(url_long_text,headers=g_weibo_headers)
+                    resp_long.encoding = 'utf-8'
+                    data_long = json.loads(resp_long.text)['data']
+                    wb_data.post_content = data_long['longTextContent']
+                else:
+                    wb_data.post_content = item_blog.get("content",g_none_word) # 帖子内容
+                # wb_data.post_content = item_blog.get("content",g_none_word) # 帖子内容
                 wb_data.post_url = item_blog.get("url",g_none_word) # 帖子链接
                 wb_data.post_liked = item_blog.get("attitudes_count","0") # 点赞
                 wb_data.post_transpond = item_blog.get("reposts_count","0") # 转发
