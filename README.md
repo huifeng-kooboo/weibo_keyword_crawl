@@ -36,3 +36,13 @@ cookie从```s.weibo.com```中获取
 
 微信收款码
 <img src = "https://ytouch-1258011219.cos.ap-nanjing.myqcloud.com/uPic/naicha_weixin.jpg">
+
+
+-----
+#### todo
+
+* 优化代码
+
+* 增加异步功能
+
+* 自动生成cookie的功能

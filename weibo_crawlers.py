@@ -184,7 +184,6 @@ class WeiboCrawler(object):
         else:
             is_first = True
         is_mac = is_mac_os()
-        # 针对于是否为Mac系统 进行异常处理
         if is_mac:
             with open(file_name, 'a+', newline='') as f:
                 writer = csv.writer(f)
@@ -265,7 +264,6 @@ class WeiboCrawler(object):
                         url_user_info = f"https://weibo.com/ajax/profile/detail?uid={item_user['_id']}"
                         resp_user_info = requests.get(url_user_info,headers=g_weibo_headers)
                         data_user_info = json.loads(resp_user_info.text)['data']
-                        print(f"用户user信息为:{data_user_info}")
                         item_user['birthday'] = data_user_info.get('birthday', g_none_word)
                         label_desc = data_user_info.get("label_desc",g_none_word)
                         if label_desc == g_none_word:
