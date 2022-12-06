@@ -5,7 +5,7 @@ g_none_word = "None"  # 为空的字段统一使用
 # 微博请求头
 g_weibo_headers = {
     "user-agent":'''Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36''',
-    "cookie": '''SINAGLOBAL=8442133158314.253.1626682443637; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWqQKicwefG8NILG0Ep.eDf5JpX5KMhUgL.Foz0ShnNSh2f1Kz2dJLoIpjLxKqL1-BL1-eLxKnLB.-L1h.LxK.L1KBL12zt; UOR=login.sina.com.cn,weibo.com,login.sina.com.cn; PC_TOKEN=a30b589861; ALF=1672630856; SSOLoginState=1670038856; SCF=AiUCu1UuXqnKGG3UVTsT5Kw_g3FfTTBsdquxuXiL-npELaDQ4M9s1jthwdm6oa6cOiOzF76xYOpDc-PrmTy4g1I.; SUB=_2A25OjrUZDeRhGeRN71oW9C_Jwj6IHXVt_aHRrDV8PUNbmtANLXGgkW9NU7PGeE-xTMOTzbAvwpHGsQe7MCOrwry7; _s_tentry=login.sina.com.cn; Apache=5262559104979.425.1670038857482; ULV=1670038857486:8:2:3:5262559104979.425.1670038857482:1669904230645''',
+    "cookie": '''SINAGLOBAL=8442133158314.253.1626682443637; UOR=login.sina.com.cn,weibo.com,login.sina.com.cn; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWqQKicwefG8NILG0Ep.eDf5JpX5KMhUgL.Foz0ShnNSh2f1Kz2dJLoIpjLxKqL1-BL1-eLxKnLB.-L1h.LxK.L1KBL12zt; PC_TOKEN=f63facad82; ALF=1672923585; SSOLoginState=1670331586; SCF=AiUCu1UuXqnKGG3UVTsT5Kw_g3FfTTBsdquxuXiL-npE-7wOJ6l_o83_Yi5Mc5HHyK1lf-p_vDMrBqW_vZFYsMo.; SUB=_2A25Oi0ySDeRhGeRN71oW9C_Jwj6IHXVt4TlarDV8PUNbmtANLRP6kW9NU7PGeIOAhc6CCmw_tgbsbj8RUpYtb1ix; _s_tentry=login.sina.com.cn; Apache=776855912291.9227.1670331587225; ULV=1670331587237:11:5:2:776855912291.9227.1670331587225:1670143274510; XSRF-TOKEN=u7QbieV9DkLthmH0Y-brQPph; WBPSESS=5wJyffL-CzuDMohJ6cqKmF941RsEE4ggDzsxBzyjKB5xovtW79R2QdMw5W_6wJ5jCgRyN6-qUKM6fKNdGs3t4aiinbayABmIr645_xBnBcLtDEB1QU_vs8KoWPkCuSB2''',
     "accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "accept-encoding":"gzip, deflate, br", 
     "accept-language":"zh-CN,zh;q=0.9,ko;q=0.8,en;q=0.7",
@@ -54,4 +54,4 @@ class WeiboData():
         self.post_ip_pos = "" # ip归属地
         self.post_gender = "" # 性别
         self.post_all_weibo_nums = "" # 全部微博数量
-        self.post_all_weibo_fans = "12"
+        self.post_all_weibo_tags = ""  # 标签

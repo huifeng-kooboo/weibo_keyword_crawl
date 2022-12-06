@@ -184,6 +184,7 @@ class WeiboCrawler(object):
         else:
             is_first = True
         is_mac = is_mac_os()
+        # 针对于是否为Mac系统 进行异常处理
         if is_mac:
             with open(file_name, 'a+', newline='') as f:
                 writer = csv.writer(f)
@@ -192,7 +193,7 @@ class WeiboCrawler(object):
                               "帖子转发数","帖子评论数","图片视频链接",
                               "发布时间","发布者的id","发布者的姓名",
                               "发布人的账号类型","发布人的粉丝数","作者简介",
-                              "ip归属地","性别","全部微博数量"]
+                              "ip归属地","性别","全部微博数量","微博标签"]
                     writer.writerow(first_data)
                 data = []
                 for item_ in data_dict.values():
@@ -207,7 +208,7 @@ class WeiboCrawler(object):
                               "帖子转发数","帖子评论数","图片视频链接",
                               "发布时间","发布者的id","发布者的姓名",
                               "发布人的账号类型","发布人的粉丝数","作者简介",
-                              "ip归属地","性别","全部微博数量"]
+                              "ip归属地","性别","全部微博数量","微博标签"]
                         writer.writerow(first_data)
                     data = []
                     for item_ in data_dict.values():
@@ -232,7 +233,7 @@ class WeiboCrawler(object):
             result_text = self.__result_text # 结果
             tweet_ids = re.findall(r'\d+/(.*?)\?refer_flag=1001030103_\'\)">复制微博地址</a>', result_text)
             for tweet_id in tweet_ids:
-                wb_data = WeiboData() # 微博数据
+                wb_data = WeiboData() # 需要记录的微博数据
                 wb_data.keyword = self.__key_word # 关键词
                 url = f"https://weibo.com/ajax/statuses/show?id={tweet_id}"
                 resp_blog = requests.get(url, headers=g_weibo_headers)
@@ -249,6 +250,7 @@ class WeiboCrawler(object):
                 wb_data.post_release_time = item_blog.get("created_at",g_none_word) # 发布时间
                 wb_data.post_user_id = item_blog["user"]["_id"] # 发布者的id
                 wb_data.post_user_name = item_blog["user"]["nick_name"]
+                print(f"user_id:{wb_data.post_user_id}")
                 for key_, value_ in item_blog.items():
                     if key_ == "user":
                         user_dict = value_
@@ -263,8 +265,23 @@ class WeiboCrawler(object):
                         url_user_info = f"https://weibo.com/ajax/profile/detail?uid={item_user['_id']}"
                         resp_user_info = requests.get(url_user_info,headers=g_weibo_headers)
                         data_user_info = json.loads(resp_user_info.text)['data']
-                        # print(f"用户基础信息为:{data_user_info}")
+                        print(f"用户user信息为:{data_user_info}")
                         item_user['birthday'] = data_user_info.get('birthday', g_none_word)
+                        label_desc = data_user_info.get("label_desc",g_none_word)
+                        if label_desc == g_none_word:
+                            pass
+                        else:
+                            print(type(label_desc))
+                            tags_ = ""
+                            for label in label_desc:
+                                name_ = label.get("name",g_none_word)
+                                if name_ != g_none_word:
+                                    tags_ += f"{name_},"
+                            if tags_!="":
+                                wb_data.post_all_weibo_tags = tags_
+                            else:
+                                wb_data.post_all_weibo_tags = g_none_word
+                            print(f"result:{label_desc}")
                         if 'created_at' not in item_user:
                             item_user['created_at'] = data_user_info.get('created_at', g_none_word)
                         item_user['desc_text'] = data_user_info.get('desc_text', g_none_word)
