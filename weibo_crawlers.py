@@ -192,7 +192,7 @@ class WeiboCrawler(object):
                               "帖子转发数","帖子评论数","图片视频链接",
                               "发布时间","发布者的id","发布者的姓名",
                               "发布人的账号类型","发布人的粉丝数","作者简介",
-                              "ip归属地","性别","全部微博数量","微博标签"]
+                              "ip归属地","性别","全部微博数量","微博标签","图片视频类型","博主分类","公司","大学","加入微博时间","信用","爬取时间"]
                     writer.writerow(first_data)
                 data = []
                 for item_ in data_dict.values():
@@ -207,7 +207,7 @@ class WeiboCrawler(object):
                               "帖子转发数","帖子评论数","图片视频链接",
                               "发布时间","发布者的id","发布者的姓名",
                               "发布人的账号类型","发布人的粉丝数","作者简介",
-                              "ip归属地","性别","全部微博数量","微博标签"]
+                              "ip归属地","性别","全部微博数量","微博标签","图片视频类型","博主分类","公司","大学","加入微博时间","信用","爬取时间"]
                         writer.writerow(first_data)
                     data = []
                     for item_ in data_dict.values():
@@ -257,6 +257,12 @@ class WeiboCrawler(object):
                 wb_data.post_transpond = item_blog.get("reposts_count","0") # 转发
                 wb_data.post_comment = item_blog.get("comments_count","0") # 评论
                 wb_data.post_image_videos_link = str(item_blog.get("video",g_none_word)) + str(item_blog.get("pic_urls",g_none_word)) # 图片记录
+                if item_blog.get("video",g_none_word) != g_none_word:
+                    wb_data.post_all_image_video_type = "视频"
+                elif item_blog.get("pic_urls",g_none_word) != g_none_word:
+                    wb_data.post_all_image_video_type = "图片"
+                else:
+                    wb_data.post_all_image_video_type = "None"
                 wb_data.post_release_time = item_blog.get("created_at",g_none_word) # 发布时间
                 wb_data.post_user_id = item_blog["user"]["_id"] # 发布者的id
                 wb_data.post_user_name = item_blog["user"]["nick_name"]
@@ -275,6 +281,7 @@ class WeiboCrawler(object):
                         url_user_info = f"https://weibo.com/ajax/profile/detail?uid={item_user['_id']}"
                         resp_user_info = requests.get(url_user_info,headers=g_weibo_headers)
                         data_user_info = json.loads(resp_user_info.text)['data']
+                        print(f"用户user_info:{data_user_info}")
                         item_user['birthday'] = data_user_info.get('birthday', g_none_word)
                         label_desc = data_user_info.get("label_desc",g_none_word)
                         if label_desc == g_none_word:
