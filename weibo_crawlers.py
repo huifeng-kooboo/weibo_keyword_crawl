@@ -283,6 +283,16 @@ class WeiboCrawler(object):
                         data_user_info = json.loads(resp_user_info.text)['data']
                         print(f"用户user_info:{data_user_info}")
                         item_user['birthday'] = data_user_info.get('birthday', g_none_word)
+                        if data_user_info.get("sunshine_credit",g_none_word) != g_none_word:
+                            sunshine_ = data_user_info.get("sunshine_credit")
+                            level_ = sunshine_.get("level",g_none_word)
+                            wb_data.post_incredit = level_
+                        wb_data.post_company = data_user_info.get('company', g_none_word)
+                        if data_user_info.get("education",g_none_word) != g_none_word:
+                            sunshine_ = data_user_info.get("education")
+                            level_ = sunshine_.get("school",g_none_word)
+                            wb_data.post_university = level_
+                        wb_data.post_add_time_to_weibo =  data_user_info.get('created_at', g_none_word)
                         label_desc = data_user_info.get("label_desc",g_none_word)
                         if label_desc == g_none_word:
                             pass
