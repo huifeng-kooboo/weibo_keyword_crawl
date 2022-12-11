@@ -4,6 +4,17 @@ import dateutil
 import datetime
 import os
 import platform
+import time
+
+def get_time_stamp_str():
+    """获取返回时间戳
+    """
+    current_time = time.time()
+    local_time = time.localtime(current_time)
+    time_stamp = time.strftime("%Y-%m-%d-%H-%M-%S",local_time)
+    return time_stamp
+# get_time_stamp_str()
+
 
 def parse_weibo_time_list(begin_time:str, end_time: str, day_interval: int = 4):
     """获取 begin 和end的列表集合
@@ -23,7 +34,7 @@ def parse_weibo_time_list(begin_time:str, end_time: str, day_interval: int = 4):
     else:
         time_begin_inter = begin_time_date_
         end_time_inter = begin_time_date_ +  datetime.timedelta(days=day_interval)
-        while end_time_inter < end_time_date_:
+        while end_time_inter <= end_time_date_:
             time_list.append([time_begin_inter, end_time_inter])
             time_begin_inter = time_begin_inter + datetime.timedelta(days=day_interval)
             end_time_inter = time_begin_inter + datetime.timedelta(days=day_interval) 

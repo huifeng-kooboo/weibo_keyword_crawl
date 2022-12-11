@@ -5,7 +5,7 @@ g_none_word = "None"  # 为空的字段统一使用
 # 微博请求头
 g_weibo_headers = {
     "user-agent":'''Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36''',
-    "cookie": '''SINAGLOBAL=3256128998160.124.1669030893239; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWqQKicwefG8NILG0Ep.eDf5JpX5KMhUgL.Foz0ShnNSh2f1Kz2dJLoIpjLxKqL1-BL1-eLxKnLB.-L1h.LxK.L1KBL12zt; PC_TOKEN=11ee00d6ec; ALF=1673059200; SSOLoginState=1670467202; SCF=AmcxkHEcoFPuES4T2RJDcOu66lBoqWJ0BVvZTPZxwUv4xnbqMADOKQ8ydo-7dp9wnwBKiCvtmxbEvj9RM-qY0QY.; SUB=_2A25OlT7TDeRhGeRN71oW9C_Jwj6IHXVt4xcbrDV8PUNbmtANLUvwkW9NU7PGeEiG62UiUMKVDGSv2J88e9_yKrff; _s_tentry=login.sina.com.cn; UOR=,,login.sina.com.cn; Apache=7133612634857.518.1670467202850; ULV=1670467202870:4:1:1:7133612634857.518.1670467202850:1669780336665''',
+    "cookie": '''SINAGLOBAL=8442133158314.253.1626682443637; UOR=login.sina.com.cn,weibo.com,login.sina.com.cn; SUBP=0033WrSXqPxfM725Ws9jqgMF55529P9D9WWqQKicwefG8NILG0Ep.eDf5JpX5KMhUgL.Foz0ShnNSh2f1Kz2dJLoIpjLxKqL1-BL1-eLxKnLB.-L1h.LxK.L1KBL12zt; ALF=1673265667; SSOLoginState=1670673668; SCF=AiUCu1UuXqnKGG3UVTsT5Kw_g3FfTTBsdquxuXiL-npES7QhaQR7We0rcqWyBohAF-GWWpT3hsHBZRVUAgXGNPc.; SUB=_2A25OkAVUDeRhGeRN71oW9C_Jwj6IHXVt5HGcrDV8PUNbmtANLWvMkW9NU7PGeGXFKyOow6Cn83lh4mfZLSbtVC3q; XSRF-TOKEN=oA60rlTwvwBZvkm9LgFvY_6F; _s_tentry=weibo.com; Apache=4651324485539.534.1670673680027; ULV=1670673680069:12:6:3:4651324485539.534.1670673680027:1670331587237; WBPSESS=5wJyffL-CzuDMohJ6cqKmIUlMWelzHC7-OD7uWQSh_mWp9vIJgrTAQ0B_5r7kGChGnqqXAvF2y0K2B2lv_R9-VRE100K9-Ek_vEAUl5H6Wi1jIil_I5vVxLLVKYDUMupv58huxh63JeZp8xQ1HFdcw==; PC_TOKEN=2581995973''',
     "accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
     "accept-encoding":"gzip, deflate, br", 
     "accept-language":"zh-CN,zh;q=0.9,ko;q=0.8,en;q=0.7",
@@ -62,3 +62,4 @@ class WeiboData():
         self.post_add_time_to_weibo = "weibo-time" # 加入微博时间
         self.post_incredit = "信用" # 信用极好
         self.post_scrapy_time = "time" # 爬取时间
+        self.post_release_terminal = "手机" # 发布终端

@@ -6,7 +6,16 @@ import re
 import json
 import os
 import dateutil.parser
+import time
 
+
+def get_time_stamp_str():
+    """获取返回时间戳
+    """
+    current_time = time.time()
+    local_time = time.localtime(current_time)
+    time_stamp = time.strftime("%Y-%m-%d-%H-%M-%S",local_time)
+    return time_stamp
 
 def base62_decode(string):
     """
@@ -192,7 +201,7 @@ class WeiboCrawler(object):
                               "帖子转发数","帖子评论数","图片视频链接",
                               "发布时间","发布者的id","发布者的姓名",
                               "发布人的账号类型","发布人的粉丝数","作者简介",
-                              "ip归属地","性别","全部微博数量","微博标签","图片视频类型","博主分类","公司","大学","加入微博时间","信用","爬取时间"]
+                              "ip归属地","性别","全部微博数量","微博标签","图片视频类型","博主分类","公司","大学","加入微博时间","信用","爬取时间","发布终端"]
                     writer.writerow(first_data)
                 data = []
                 for item_ in data_dict.values():
@@ -207,7 +216,7 @@ class WeiboCrawler(object):
                               "帖子转发数","帖子评论数","图片视频链接",
                               "发布时间","发布者的id","发布者的姓名",
                               "发布人的账号类型","发布人的粉丝数","作者简介",
-                              "ip归属地","性别","全部微博数量","微博标签","图片视频类型","博主分类","公司","大学","加入微博时间","信用","爬取时间"]
+                              "ip归属地","性别","全部微博数量","微博标签","图片视频类型","博主分类","公司","大学","加入微博时间","信用","爬取时间","发布终端"]
                         writer.writerow(first_data)
                     data = []
                     for item_ in data_dict.values():
@@ -263,10 +272,13 @@ class WeiboCrawler(object):
                     wb_data.post_all_image_video_type = "图片"
                 else:
                     wb_data.post_all_image_video_type = "None"
-                wb_data.post_release_time = item_blog.get("created_at",g_none_word) # 发布时间
-                wb_data.post_user_id = item_blog["user"]["_id"] # 发布者的id
-                wb_data.post_user_name = item_blog["user"]["nick_name"]
-                print(f"user_id:{wb_data.post_user_id}")
+                try:
+                    wb_data.post_release_time = item_blog.get("created_at",g_none_word) # 发布时间
+                    wb_data.post_user_id = item_blog["user"]["_id"] # 发布者的id
+                    wb_data.post_user_name = item_blog["user"]["nick_name"]
+                except:
+                    pass
+                wb_data.post_scrapy_time = get_time_stamp_str() # 爬取微博的时间
                 for key_, value_ in item_blog.items():
                     if key_ == "user":
                         user_dict = value_
@@ -292,22 +304,26 @@ class WeiboCrawler(object):
                             sunshine_ = data_user_info.get("education")
                             level_ = sunshine_.get("school",g_none_word)
                             wb_data.post_university = level_
-                        wb_data.post_add_time_to_weibo =  data_user_info.get('created_at', g_none_word)
-                        label_desc = data_user_info.get("label_desc",g_none_word)
-                        if label_desc == g_none_word:
-                            pass
-                        else:
-                            print(type(label_desc))
-                            tags_ = ""
-                            for label in label_desc:
-                                name_ = label.get("name",g_none_word)
-                                if name_ != g_none_word:
-                                    tags_ += f"{name_},"
-                            if tags_!="":
-                                wb_data.post_all_weibo_tags = tags_
+                        try:
+                            wb_data.post_add_time_to_weibo =  data_user_info.get('created_at', g_none_word)
+                            label_desc = data_user_info.get("label_desc",g_none_word)
+                            if label_desc == g_none_word:
+                                pass
                             else:
-                                wb_data.post_all_weibo_tags = g_none_word
-                            print(f"result:{label_desc}")
+                                print(type(label_desc))
+                                tags_ = ""
+                                for label in label_desc:
+                                    name_ = label.get("name",g_none_word)
+                                    if name_ != g_none_word:
+                                        tags_ += f"{name_},"
+                                if tags_!="":
+                                    wb_data.post_all_weibo_tags = tags_
+                                else:
+                                     wb_data.post_all_weibo_tags = g_none_word
+                                print(f"result:{label_desc}")
+                        except:
+                            pass
+                        
                         if 'created_at' not in item_user:
                             item_user['created_at'] = data_user_info.get('created_at', g_none_word)
                         item_user['desc_text'] = data_user_info.get('desc_text', g_none_word)
@@ -328,15 +344,22 @@ class WeiboCrawler(object):
                                 wb_data.post_account_type = "无认证"
                         else:
                             wb_data.post_account_type = "无认证"
-                        wb_data.post_fans_num = item_user.get("friends_count",g_none_word) # 粉丝数
-                        wb_data.post_author_brief = item_user.get("description",g_none_word) # 简介
-                        wb_data.post_ip_pos = item_user.get("ip_location",g_none_word)
-                        sex = item_user.get("gender","m") # m 男性
-                        if sex == "m":
-                            wb_data.post_gender = "男"
-                        else:
-                            wb_data.post_gender = "女"
-                        wb_data.post_all_weibo_nums  = item_user.get("statuses_count",g_none_word)
+                        
+                        try:
+                            wb_data.post_fans_num = item_user.get("friends_count",g_none_word) # 粉丝数
+                            wb_data.post_author_brief = item_user.get("description",g_none_word) # 简介
+                            wb_data.post_ip_pos = item_user.get("ip_location",g_none_word)
+                        except:
+                            pass
+                        try:
+                            sex = item_user.get("gender","m") # m 男性
+                            if sex == "m":
+                                wb_data.post_gender = "男"
+                            else:
+                                wb_data.post_gender = "女"
+                            wb_data.post_all_weibo_nums  = item_user.get("statuses_count",g_none_word)
+                        except:
+                            pass
                         self.save_wb_data(file_name,wb_data)
                         
                         
