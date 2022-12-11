@@ -56,7 +56,7 @@ class WeiboData():
         self.post_all_weibo_nums = "" # 全部微博数量
         self.post_all_weibo_tags = ""  # 标签
         self.post_all_image_video_type = "1" # 图片或者视频类型
-        self.post_blogger_type = "情感博主" # 博主分类
+        self.post_blogger_type = "无" # 博主分类
         self.post_company = "company" # 公司
         self.post_university = "university" #大学
         self.post_add_time_to_weibo = "weibo-time" # 加入微博时间

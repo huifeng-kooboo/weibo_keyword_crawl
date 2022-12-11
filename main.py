@@ -4,11 +4,6 @@ import dateutil
 import datetime
 import os
 import platform
-import time
-
-
-# get_time_stamp_str()
-
 
 def parse_weibo_time_list(begin_time:str, end_time: str, day_interval: int = 4):
     """获取 begin 和end的列表集合
@@ -39,8 +34,8 @@ def parse_weibo_time_list(begin_time:str, end_time: str, day_interval: int = 4):
 
 search_config = {
     "keyword" : "补气血", # 搜索关键词
-    "begin_time":"2022-08-01-1",  # 开始时间 2022-11-08-1 ： 表示2022年11月8号1时
-    "end_time":"2022-08-03-1",   # 结果时间： 2022-11-25-1：表示2022年11月25号1时
+    "begin_time":"2022-11-29-23",  # 开始时间 2022-11-08-1 ： 表示2022年11月8号1时
+    "end_time":"2022-12-01-23",  # 结果时间： 2022-11-25-1：表示2022年11月25号1时
     "page" : "4"  # 页码
 }
 
@@ -49,7 +44,8 @@ if __name__ == "__main__":
     """
     print("微博搜索BEGIN")
     # 4表示每隔4天搜索时间
-    data_time_list = parse_weibo_time_list(search_config.get("begin_time",""),search_config.get("end_time",""),4)
+    data_time_list = parse_weibo_time_list(search_config.get("begin_time",""),search_config.get("end_time",""),2)
+    print(data_time_list)
     for time_list in data_time_list:
         begin_time_ = time_list[0].strftime('%Y-%m-%d-%H')
         end_time_ = time_list[1].strftime('%Y-%m-%d-%H')
@@ -58,16 +54,20 @@ if __name__ == "__main__":
         search_config["end_time"] = end_time_
         try:
         # range 调整页码
-            for page_num in range(0,20):
-                key_word = search_config.get("keyword","")
-                search_config["page"] = str(page_num)
-                page = search_config.get("page","")
-                begin_time = search_config.get("begin_time","")
-                end_time = search_config.get("end_time","")
-                wb = WeiboCrawler(search_config)
-                wb.start_search()
-                wb.save_to_file(f"{key_word}_开始时间{begin_time}_{end_time}.csv",True)
+            for page_num in range(0,50):
+                try:
+                    key_word = search_config.get("keyword","")
+                    search_config["page"] = str(page_num)
+                    page = search_config.get("page","")
+                    begin_time = search_config.get("begin_time","")
+                    end_time = search_config.get("end_time","")
+                    wb = WeiboCrawler(search_config)
+                    wb.start_search()
+                    wb.save_to_file(f"{key_word}_开始时间{begin_time}_{end_time}.csv",True)
+                except:
+                    continue
         except:
+
             continue
                 
     print("微博搜索END")

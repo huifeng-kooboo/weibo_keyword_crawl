@@ -298,6 +298,7 @@ class WeiboCrawler(object):
                         data_user_info = json.loads(resp_user_info.text)['data']
                         print(f"用户user_info:{data_user_info}")
                         item_user['birthday'] = data_user_info.get('birthday', g_none_word)
+                        wb_data.post_blogger_type = item_user.get('verified_reason',g_none_word)
                         if data_user_info.get("sunshine_credit",g_none_word) != g_none_word:
                             sunshine_ = data_user_info.get("sunshine_credit")
                             level_ = sunshine_.get("level",g_none_word)
