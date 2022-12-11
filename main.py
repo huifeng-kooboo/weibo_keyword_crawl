@@ -6,13 +6,7 @@ import os
 import platform
 import time
 
-def get_time_stamp_str():
-    """获取返回时间戳
-    """
-    current_time = time.time()
-    local_time = time.localtime(current_time)
-    time_stamp = time.strftime("%Y-%m-%d-%H-%M-%S",local_time)
-    return time_stamp
+
 # get_time_stamp_str()
 
 
@@ -44,7 +38,7 @@ def parse_weibo_time_list(begin_time:str, end_time: str, day_interval: int = 4):
     
 
 search_config = {
-    "keyword" : "程潇", # 搜索关键词
+    "keyword" : "补气血", # 搜索关键词
     "begin_time":"2022-08-01-1",  # 开始时间 2022-11-08-1 ： 表示2022年11月8号1时
     "end_time":"2022-08-03-1",   # 结果时间： 2022-11-25-1：表示2022年11月25号1时
     "page" : "4"  # 页码

@@ -161,17 +161,20 @@ class WeiboCrawler(object):
         return False
     
     def parse_blog_info(self, data):
+        # print(f"blog_data:{data}")
+        source_ = data.get("source",g_none_word)
+        print(f"source_:{source_}")
         tweet = {
         "_id": str(data['mid']),
         "mblogid": data['mblogid'],  # 博客id
         "created_at": parse_time(data['created_at']),  # 文章发布时间
-        "geo": data['geo'],
-        "ip_location": data.get('region_name', None),
-        "reposts_count": data['reposts_count'],
-        "comments_count": data['comments_count'],
-        "attitudes_count": data['attitudes_count'],
-        "source": data['source'],
-        "content": data['text_raw'].replace('\u200b', ''),
+        "geo": data.get('geo',g_none_word),
+        "ip_location": data.get('region_name', g_none_word),
+        "reposts_count": data.get('reposts_count',g_none_word),
+        "comments_count": data.get('comments_count',g_none_word),
+        "attitudes_count": data.get('attitudes_count',g_none_word),
+        "source": data.get("source",g_none_word),
+        "content": data.get('text_raw',g_none_word).replace('\u200b', ''),
         "pic_urls": ["https://wx1.sinaimg.cn/orj960/" + pic_id for pic_id in data.get('pic_ids', [])],
         "pic_num": data['pic_num'],
         'isLongText': False,
@@ -252,7 +255,6 @@ class WeiboCrawler(object):
                 if item_blog["isLongText"]:
                     # 长篇文章
                     long_id = item_blog['mblogid']
-                    print(f"id为{long_id}的是一篇长篇文章")
                     url_long_text = "https://weibo.com/ajax/statuses/longtext?id=" + item_blog['mblogid']
                     resp_long = requests.get(url_long_text,headers=g_weibo_headers)
                     resp_long.encoding = 'utf-8'
@@ -261,6 +263,7 @@ class WeiboCrawler(object):
                 else:
                     wb_data.post_content = item_blog.get("content",g_none_word) # 帖子内容
                 # wb_data.post_content = item_blog.get("content",g_none_word) # 帖子内容
+                wb_data.post_release_terminal = item_blog.get('source',g_none_word) # 终端
                 wb_data.post_url = item_blog.get("url",g_none_word) # 帖子链接
                 wb_data.post_liked = item_blog.get("attitudes_count","0") # 点赞
                 wb_data.post_transpond = item_blog.get("reposts_count","0") # 转发
@@ -310,7 +313,6 @@ class WeiboCrawler(object):
                             if label_desc == g_none_word:
                                 pass
                             else:
-                                print(type(label_desc))
                                 tags_ = ""
                                 for label in label_desc:
                                     name_ = label.get("name",g_none_word)
@@ -320,7 +322,6 @@ class WeiboCrawler(object):
                                     wb_data.post_all_weibo_tags = tags_
                                 else:
                                      wb_data.post_all_weibo_tags = g_none_word
-                                print(f"result:{label_desc}")
                         except:
                             pass
                         
