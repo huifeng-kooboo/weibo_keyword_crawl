@@ -348,7 +348,7 @@ class WeiboCrawler(object):
                             wb_data.post_account_type = "无认证"
                         
                         try:
-                            wb_data.post_fans_num = item_user.get("friends_count",g_none_word) # 粉丝数
+                            wb_data.post_fans_num = item_user.get("followers_count",g_none_word) # 粉丝数
                             wb_data.post_author_brief = item_user.get("description",g_none_word) # 简介
                             wb_data.post_ip_pos = item_user.get("ip_location",g_none_word)
                         except:
