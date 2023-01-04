@@ -203,7 +203,7 @@ class WeiboCrawler(object):
                     first_data = ["关键词","帖子内容","帖子链接","帖子点赞数",
                               "帖子转发数","帖子评论数","图片视频链接",
                               "发布时间","发布者的id","发布者的姓名",
-                              "发布人的账号类型","发布人的粉丝数","作者简介",
+                              "发布人的账号类型","发布人的粉丝数","发布者的关注数","作者简介",
                               "ip归属地","性别","全部微博数量","微博标签","图片视频类型","博主分类","公司","大学","加入微博时间","信用","爬取时间","发布终端"]
                     writer.writerow(first_data)
                 data = []
@@ -218,7 +218,7 @@ class WeiboCrawler(object):
                         first_data = ["关键词","帖子内容","帖子链接","帖子点赞数",
                               "帖子转发数","帖子评论数","图片视频链接",
                               "发布时间","发布者的id","发布者的姓名",
-                              "发布人的账号类型","发布人的粉丝数","作者简介",
+                              "发布人的账号类型","发布人的粉丝数","发布者的关注数","作者简介",
                               "ip归属地","性别","全部微博数量","微博标签","图片视频类型","博主分类","公司","大学","加入微博时间","信用","爬取时间","发布终端"]
                         writer.writerow(first_data)
                     data = []
@@ -349,6 +349,7 @@ class WeiboCrawler(object):
                         
                         try:
                             wb_data.post_fans_num = item_user.get("followers_count",g_none_word) # 粉丝数
+                            wb_data.post_concerns_num = item_user.get("friends_count",g_none_word)
                             wb_data.post_author_brief = item_user.get("description",g_none_word) # 简介
                             wb_data.post_ip_pos = item_user.get("ip_location",g_none_word)
                         except:
