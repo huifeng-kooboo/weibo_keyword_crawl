@@ -9,7 +9,6 @@ cffi==1.15.1
 charset-normalizer==2.1.1
 constantly==15.1.0
 cryptography==38.0.4
-cssselect==1.2.0
 exceptiongroup==1.0.4
 filelock==3.8.0
 h11==0.14.0
