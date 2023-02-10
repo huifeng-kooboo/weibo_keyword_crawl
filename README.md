@@ -24,6 +24,15 @@ cookie从```s.weibo.com```中获取
 # 参考部分
 借鉴了```https://github.com/nghuyong/WeiboSpider``` 的相关代码
 
+---
+#  Join
+
+* if you want to join the projects to contribute the code to this project, you can email 942840260@qq.com or gisdoing@gmail.com, or connect with wechat: ytouching
+
+* 如果想加入这个工程一起贡献开源代码的话，欢迎联系邮箱: 942840260@qq.com 或者 gisdoing@gmail.com 或者微信: ytouching
+
+---
+
 # 使用Q&A
 使用过程中存在任何问题，麻烦联系邮箱```942840260@qq.com```,
 或者微信```ytouching```
