@@ -1,8 +1,10 @@
 # weibo_keyword_crawl
 Python爬取微博关键词，并且记录相关数据
+
 优势在于：
 1. 完善的数据写入机制，方便用户进行数据分析
 2. 针对于搜索日期进行优化，有增加了对时间间隔的处理
+3. 每天对单个关键词至多可以爬取50页的数据
 
 # 环境安装
 1. 需要Python3.8 +的版本
@@ -14,7 +16,7 @@ Python爬取微博关键词，并且记录相关数据
 
 1. 配置cookie
 在```config.py```文件 ```g_weibo_headers```修改cookie，
-cookie从```s.weibo.com```中获取
+cookie从谷歌浏览器上```https://s.weibo.com/```中获取
 
 2.```main.py```中修改```search_config```配置相关搜索信息
 
@@ -50,8 +52,8 @@ cookie从```s.weibo.com```中获取
 -----
 #### todo
 
-* 优化代码
+* 优化代码【已完成】
 
-* 增加异步功能
+* 增加搜索多个关键词的功能 【已完成】
 
 * 自动生成cookie的功能
