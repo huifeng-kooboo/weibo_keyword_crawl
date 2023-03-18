@@ -138,6 +138,7 @@ class WeiboCrawler(object):
                 resp_text = resp.text
                 self.__search_result = True
                 self.__result_text = resp_text
+                print(f"获取内容为:{self.__result_text}")
                 return True
             except:
                 print("搜索结果异常")
