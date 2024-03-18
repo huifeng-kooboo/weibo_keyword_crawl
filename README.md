@@ -16,7 +16,9 @@ Python爬取微博关键词，并且记录相关数据
 
 1. 配置cookie
 在```config.py```文件 ```g_weibo_headers```修改cookie，
-cookie从谷歌浏览器上```https://s.weibo.com/```中获取
+
+(重要重要)cookie从谷歌浏览器上```https://s.weibo.com/```，用户需要登录后中获取
+
 
 2.```main.py```中修改```search_config```配置相关搜索信息
 
