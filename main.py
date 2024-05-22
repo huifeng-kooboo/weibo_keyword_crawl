@@ -30,11 +30,11 @@ def parse_weibo_time_list(begin_time:str, end_time: str, day_interval: int = 4):
         return time_list
         
     
-search_key_list = ['ChatGPT','清华大学']
+search_key_list = ['干旱']
 
 search_config = {
-    "begin_time":"2023-02-03-23",  # 开始时间 2022-11-08-1 ： 表示2022年11月8号1时
-    "end_time":"2023-03-02-23",  # 结果时间： 2022-11-25-1：表示2022年11月25号1时
+    "begin_time":"2021-01-04-23",  # 开始时间 2022-11-08-1 ： 表示2022年11月8号1时
+    "end_time":"2022-01-01-23",  # 结果时间： 2022-11-25-1：表示2022年11月25号1时
     "page" : "4"  # 页码
 }
 
