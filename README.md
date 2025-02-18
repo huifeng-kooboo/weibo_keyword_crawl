@@ -1,6 +1,9 @@
 # weibo_keyword_crawl
 Python爬取微博关键词，并且记录相关数据 : 有需要帮助的话可以加微信:ytouching (有偿解决问题，拒绝白嫖哈）
 
+- wechat: 有远程办公需求可扫码微信联系：
+  <img src="https://ytouch-1258011219.cos.ap-nanjing.myqcloud.com/person_wechat_own.jpg" width="200" height="300" />
+
 优势在于：
 1. 完善的数据写入机制，方便用户进行数据分析
 2. 针对于搜索日期进行优化，有增加了对时间间隔的处理
